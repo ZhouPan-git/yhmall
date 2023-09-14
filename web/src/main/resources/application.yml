@@ -1,0 +1,12 @@
+server:
+  port: 6000
+  web:
+    resources:
+      #      SpringMVC指定静态页面存放位置
+      static-locations: [classpath:/public/,classpath:/resources/,classpath:/META-INF/resources/,classpath:/static/,]
+
+logging:
+  level:
+    root: info
+    com.yhmall: info
+    org.springframework.web: info
