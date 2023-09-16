@@ -1,6 +1,10 @@
 server:
   port: 10000
-
+logging:
+  level:
+    root: info
+    com.yc: info
+    org.springframework: info
 spring:
   application:
     name: gateway
@@ -12,6 +16,27 @@ spring:
           uri: lb://goods
           predicates:
             - Path=/goods/**
+          filters:
+            - StripPrefix=1
+
+        - id: order
+          uri: lb://order
+          predicates:
+            - Path=/order/**
+          filters:
+            - StripPrefix=1
+
+        - id: security
+          uri: lb://security
+          predicates:
+            - Path=/security/**
+          filters:
+            - StripPrefix=1
+
+        - id: web
+          uri: lb://web
+          predicates:
+            - Path=/web/**
           filters:
             - StripPrefix=1
     nacos:

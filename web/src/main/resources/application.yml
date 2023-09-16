@@ -10,3 +10,18 @@ logging:
     root: info
     com.yhmall: info
     org.springframework.web: info
+spring:
+  cloud:
+    nacos:
+      discovery:
+        #  namespace: yc125test   #服务的命名空间
+        server-addr: localhost:8848
+        username: nacos
+        password: nacos
+  application:
+    name: web
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

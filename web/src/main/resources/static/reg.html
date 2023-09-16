@@ -21,18 +21,18 @@
         <div class="clear"></div>
     </div>
 
-<div class="reg">
+<div class="reg" id="app">
 	<div class="w1185">
     	<div class="left">
         	<p><b>免费注册</b></p>
             <form action="#" class="form">
                 <ul>
-                     <li><span><font>*</font> 用户名/手机号：</span><input class="txt" name="" type="text"/></li>
-                     <li><span><font>*</font> 请设置密码：</span><input class="txt" name="" type="text"/></li>
-                     <li><span><font>*</font> 请确认密码：</span><input class="txt" name="" type="text"/></li>
-                     <li class="li03"><span><font>*</font> 验证码：</span><input class="txt txt2" name="" type="text"/><img src="images/code.jpg"/><a href="#">看不清?换一张</a></li>
+                     <li><span><font>*</font> 邮箱账号：</span><input class="txt" name="" type="text" v-model="email"/></li>
+                     <li><span><font>*</font> 请设置密码：</span><input class="txt" name="" type="text" v-model="password"/></li>
+                     <li><span><font>*</font> 请确认密码：</span><input class="txt" name="" type="text" v-model="password1"/></li>
+                     <li class="li03"><span><font>*</font> 验证码：</span><input class="txt txt2" name="" type="text" v-model="valcode"/><img src="images/code.jpg" @click="sendEmail()"/></li>
                      <li class="li01"><input name="" type="checkbox" value=""/>我已阅并同意<a rel="#">《易易城用户注册协议》</a></li>
-                     <li class="li02"><input class="sub" type="submit" value="立即注册"/></li>
+                     <li class="li02"><input class="sub" type="button" value="立即注册" @click="reg()"/></li>
                 </ul>
             </form>
         </div>
@@ -46,5 +46,59 @@
    
     <p>网络文化经营许可证：粤网文XXX号<br />(c) 2015 深圳易易城科技网络有限公司. 粤ICP备XXX号</p>
 </div>
+
+    <script src="./js/vue.js"></script>
+    <script src="./js/axios.js"></script>
+    <script type="text/javascript">
+        Vue.config.productionTip = false;
+
+        // 配置访问的地址
+        var base_url = "http://localhost:10000/";
+        var addr_bbssecurity = base_url + "security/";
+
+        let vm = new Vue({
+            el: "#app",
+            data: {
+                email: '2890305092@qq.com', // 登录时用的参数
+                password: 'a',
+                password1: 'a',
+                valcode:'',
+            },
+            methods: {
+                sendEmail:function(){
+                    let params = new URLSearchParams();
+                    params.append("tos",this.email)
+                    console.log(params);
+                    axios.get(addr_bbssecurity+"email/sendEmail?"+params);
+                },
+                reg:function(){
+                    if (this.password != this.password1) {
+                        alert("两次输入密码不一致！")
+                        return;
+                    }
+                    if (this.valcode == null) {
+                        alert("验证码为空。。。")
+                        return;
+                    }
+                    let params = new URLSearchParams();
+                    params.append("email",this.email);
+                    params.append("password",this.password);
+                    params.append("email",this.email);
+                    params.append("valcode",this.valcode)
+                    axios.post(addr_bbssecurity+"security/user/reg.action",params).then(data=>{
+                        if (data.data.code == 1) {
+                            alert("注册成功！");
+                            window.location = 'index.html';
+                        }
+                        let result = data.data;
+                        if (result.code == 0) {
+                            alert("登录失败，原因： " + result.msg);
+                            return;
+                        }
+                    });
+                }
+            }
+        });
+    </script>
 </body>
 </html>

@@ -1,5 +1,11 @@
+jwt:
+  #  密钥与标头和有效载荷相结合以创建唯一的哈希,只有当您拥有密钥时,我们才能验证此哈希
+  #  jwt token格式: base64头部(算法,标记类型) + base64载荷 + 算法(base64头部(算法,标记类型) + base64载荷) => 签名
+  secret: javainuse
+
 server:
-  port: 9000
+  port: 8009
+
 
 spring:
   application:
@@ -9,11 +15,54 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+  redis:
+    database: 4
+    host: 127.0.0.1
+    port: 6380
+    password: a
+    timeout: 10000ms
+    jedis:
+      pool:
+        max-active: -1
+        max-wait: -1ms
+        max-idle: 10
+        min-idle: 0
+
+  # 邮箱基本配置
+  mail:
+    # 配置 smtp 服务主机地址
+    # qq 邮箱     smtp.qq.com    端口号 465 或 587
+    # sina       smtp.sina.com
+    # aliyun     smtp.aliyun.com
+    # 163        smtp.163.com   端口号 465 或 994
+    host: smtp.qq.com
+    # 发送者邮箱
+    username: 2890305092@qq.com
+    # 在邮箱内申请的授权码
+    password: jvpdhkduxxaydcjb
+    # 端口号
+    port: 587
+    # 默认的邮件编码为UTF-8
+    default-encoding: UTF-8
+    # 其他参数
+    properties:
+      mail:
+        # 配置SSL 加密工厂
+        smtp:
+          ssl:
+            # 本地测试， 先放开ssl
+            enable: false
+            required: false
+          #开启debug模式，这样邮件发送过程的日志会在控制台打印出来，方便排查错误
+        debug: true
+
+
+
   datasource:
     username: root
-    password: 1234
+    password: 123456
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/res_cloud?serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/yhmall?serverTimezone=UTC
     type: com.alibaba.druid.pool.DruidDataSource
     # Druid的其他属性配置
     druid:

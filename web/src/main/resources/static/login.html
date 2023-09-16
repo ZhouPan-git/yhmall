@@ -21,14 +21,14 @@
         <div class="clear"></div>
     </div>
 
-<div class="m_bg">
+<div class="m_bg" id="app">
 	<div class="w1185">
     	<form action="#" class="form">
         	<p class="p01"><span>会员登录</span><a href="#">免费注册</a></p>
-        	<p class="p02"><input class="txt" name="" onblur="if(value=='') {value='账户名'}" onfocus="if(value=='账户名') {value=''}" type="text" value="账户名"/></p>
-            <p class="p03"><input class="txt" name="" onblur="if(value=='') {value='密码'}" onfocus="if(value=='密码') {value=''}" type="text" value="密码"/></p>
+        	<p class="p02"><input class="txt" name=""   v-model="username" onblur="if(value=='') {value='账户名'}" onfocus="if(value=='账户名') {value=''}" type="text" value="账户名"/></p>
+            <p class="p03"><input class="txt" name=""   v-model="password" onblur="if(value=='') {value='密码'}" onfocus="if(value=='密码') {value=''}" type="text" value="密码"/></p>
             <p class="p04"><span class="sp01"><input name="" type="checkbox"/>自动登录</span><span class="sp02">忘记密码？点击<a href="#">找回密码</a></span></p>
-            <p class="p05"><input class="sub" type="submit" value="立即登陆"/></p>
+            <p class="p05"><input class="sub" type="button" value="立即登陆"  @click="login()"/></p>
             <p class="p06">使用合作网站账号登录：</p>
             <p class="p07"><a class="a01" href="#"></a><a class="a02" href="#"></a><a class="a03" href="#"></a></p>
         </form>
@@ -40,5 +40,41 @@
    
     <p>网络文化经营许可证：粤网文XXX号<br />(c) 2015 深圳易易城科技网络有限公司. 粤ICP备XXX号</p>
 </div>
+
+    <script src="js/vue.js"></script>
+    <script src="js/axios.js"></script>
+    <script type="text/javascript">
+        Vue.config.productionTip = false;
+
+        // 配置访问的地址
+        var base_url = "http://localhost:10000/";
+        var addr_bbssecurity = base_url + "security/";
+
+        let vm = new Vue({
+            el: "#app",
+            data: {
+                username: 'XG', // 登录时用的参数
+                password: 'a'
+            },
+            methods: {
+                login(){
+                    let params = new URLSearchParams();
+                    params.append("username",this.username);
+                    params.append("password",this.password);
+                    axios.post(addr_bbssecurity+"security/user/login.action",params).then(data=>{
+                        let result = data.data;
+                        if (result.code == 0) {
+                            alert("登录失败，原因： " + result.msg);
+                            return;
+                        }
+                        localStorage.setItem('token', 'Bearer ' + result.data);
+                       // alert("登录成功，获得token" + result.data);
+                        window.location = 'index.html';
+                    });
+                }
+            }
+        });
+    </script>
 </body>
 </html>
+
