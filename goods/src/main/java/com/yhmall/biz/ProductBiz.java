@@ -1,13 +1,11 @@
 package com.yhmall.biz;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yhmall.bean.Category;
 import com.yhmall.bean.Product;
 
 import java.util.List;
-import java.util.Locale;
 
-public interface Products {
+public interface ProductBiz {
 
     //商品的增删改查操作
 
@@ -38,11 +36,9 @@ public interface Products {
      * @param songId
      * @param pageSize
      * @param pageNum
-     * @param sort
-     * @param sortby
      * @return
      */
-    public List<Product> findAllProductsByType(Integer parentId, Integer songId,int pageSize ,int pageNum ,int sort,String sortby);
+    public List<Product> findAllProductsByType(Integer parentId, Integer songId,int pageSize ,int pageNum );
 
 
     /**
@@ -65,7 +61,7 @@ public interface Products {
      * @param productName
      * @return
      */
-    public List<Product> findByname(String productName);
+    public List<Product> findByname(String productName,int pageNum,int pageSize);
 
     /**
      * 查询不同活动商品的前5个
@@ -78,11 +74,9 @@ public interface Products {
      * @param SpecialName
      * @param start
      * @param pageSize
-     * @param sort
-     * @param sortby
      * @return
      */
-    public List<Product> findProductBySpecial(String SpecialName,int start,int pageSize,int sort,String sortby);
+    public List<Product> findProductBySpecial(String SpecialName,int start,int pageSize);
 
     /**
      * 查询最多的5个商品的id 和 名字

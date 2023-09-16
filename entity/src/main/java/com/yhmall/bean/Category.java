@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 
@@ -37,7 +38,10 @@ public class Category implements Serializable {
     @TableField(value = "status")
     private Integer status;
     @TableField(value = "parent_id")
-    private Integer parent_id;
+    private Integer parentid;
+
+    @TableField(exist = false)
+    private List<Category> sonCategorys;
 
 
 }
