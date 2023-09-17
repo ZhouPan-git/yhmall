@@ -11,9 +11,9 @@ spring:
 
   datasource:
     username: root
-    password: 1234
+    password: aaaa
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/res_cloud?serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/yhmall?serverTimezone=UTC
     type: com.alibaba.druid.pool.DruidDataSource
     # Druid的其他属性配置
     druid:
