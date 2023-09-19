@@ -75,8 +75,8 @@ public class ProductImpl implements ProductBiz {
     }
 
     @Override
-    public List<Product> findProductBySpecialTop() {
-        return productDao.findProductBySpecialTop();
+    public List<Product> findProductBySpecialTop(int num) {
+        return productDao.findProductBySpecialTop(num);
     }
 
     @Override

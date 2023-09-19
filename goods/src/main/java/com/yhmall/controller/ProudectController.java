@@ -4,6 +4,7 @@ import com.yhmall.bean.Category;
 import com.yhmall.bean.Product;
 import com.yhmall.biz.ProductBiz;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -152,13 +153,13 @@ public class ProudectController {
 
 
 @PostMapping("findProductBySpecialTop")
-public Map<String, Object> findProductBySpecialTop() {
+public Map<String, Object> findProductBySpecialTop(@Param(value = "num") int num) {
     Map<String, Object> map = new HashMap<String, Object>();
     List<Product> products = null;
     Map<String, List<Product>> result = new HashMap<String, List<Product>>();
 
     try {
-        products = productBiz.findProductBySpecialTop();
+        products = productBiz.findProductBySpecialTop(num);
 
         for (Product product : products) {
             String special = product.getSpecial();
@@ -181,7 +182,7 @@ public Map<String, Object> findProductBySpecialTop() {
 
 
     @PostMapping("findMostProduct")
-    public Map<String, Object> findProductBySpecial(){
+    public Map<String, Object> findMostProduct(){
         Map<String, Object> map = new HashMap<String, Object>();
         List<Product>  products = null;
         try {

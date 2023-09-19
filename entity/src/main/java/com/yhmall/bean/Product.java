@@ -4,11 +4,10 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.List;
-
-import lombok.Data;
 
 /**
  * 
@@ -33,8 +32,7 @@ public class Product implements Serializable {
      * 分类id
      */
     @TableField(value = "category_id")
-    private Integer categoryid;
-
+    private Integer category_id;
     /**
      * 商品描述
      */
@@ -76,16 +74,6 @@ public class Product implements Serializable {
      */
     @TableField(value = "special")
     private String special;
-
-    /**
-     * 商品图片
-     */
-    @TableField(value = "img")
-    private String img;
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
-
 
 
 }

@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 /**
  * @author Nick
@@ -18,6 +19,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients(basePackages = {"com.yhmall.api"})
 @RefreshScope
 @EnableDiscoveryClient
+@CrossOrigin
 public class GoodsApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(GoodsApplication.class, args);

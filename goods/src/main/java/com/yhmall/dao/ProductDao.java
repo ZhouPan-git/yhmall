@@ -38,9 +38,17 @@ public interface ProductDao extends BaseMapper<Product> {
     //模糊查询商品
     @Select("SELECT * FROM product WHERE name LIKE CONCAT('%', #{name}, '%')ORDER BY CASE WHEN name = #{name} THEN 1 ELSE 2 END LIMIT #{start}, #{pageSize};\n")
     List<Product> findProductByName(String name,int start,int pageSize);
+
     //每种活动的前5种商品，用于显示在前端首页
-    @Select("SELECT * FROM product ORDER BY special ,CAST(salecount AS SIGNED) desc LIMIT 5")
-    List<Product> findProductBySpecialTop();
+    @Select("WITH RankedProducts AS (\n" +
+            "  SELECT *,\n" +
+            "         ROW_NUMBER() OVER (PARTITION BY special ORDER BY CAST(salecount AS SIGNED) DESC) AS row_num\n" +
+            "  FROM product\n" +
+            ")\n" +
+            "SELECT * FROM RankedProducts\n" +
+            "WHERE row_num <= #{num};\n")
+    List<Product> findProductBySpecialTop(int num);
+
     //前5种销量最好的商品，用于显示在搜索框的下方
     @Select("SELECT id,name\n" +
             "FROM product\n" +

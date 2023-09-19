@@ -9,6 +9,7 @@
 
 </head>
 <body class="index">
+<div id="app">
 <div class="top_ad"><div class="w1200"><a href="#" id="close"></a></div></div>
 
 <div class="top">
@@ -235,7 +236,111 @@
         <li><a href="#" class="a04"></a></li>
     </ul>
 </div>
-
+</div>
 
 </body>
+<script src="js/vue.js"></script>
+<script src="js/axios.js"></script>
+    <script type="text/javascript">
+        // 配置访问的地址
+        // var base_url = "http://localhost:20001/";
+        // Gateway地址
+        var addr_bbssecurity="/bbs-board/";
+
+        // 在Vue原型中添加axios，使其在Vue组件中全局可用
+        Vue.prototype.axios = axios;
+
+        // 请求拦截器，用于在每次请求时携带token到请求头中
+        axios.interceptors.request.use(config => {
+            // 从localStorage或vuex中获取token
+            const token = localStorage.getItem('token'); // 或者使用 this.$store.state.token;
+
+            // 如果有token，就添加到请求头中
+            if (token) {
+                config.headers.Authorization = token;
+            } else {
+                // 如果没有token，可以选择添加一个空字符串或其他处理方式，这取决于你的需求
+                config.headers.Authorization = '';
+            }
+            console.log(token);
+            console.log(config);
+            return config;
+        }, error => {
+            return Promise.reject(error);
+        });
+
+        var index_app = new Vue({
+            el: "#app",
+            data: {
+                boardData: [],
+                loginStatus: 0,
+                userInfo: {}
+            },
+            methods: {
+                isOnLine() {
+                    var _this = this;
+                    if (localStorage.getItem('token') == null) {
+                        _this.userInfo = {};
+                        _this.loginStatus = 0;
+                        return;
+                    }
+                    axios.get('/bbs-security/user/loginCheck').then(data => {
+                        if (data.data.code == 0) {
+                            _this.loginStatus = 0;
+                        } else {
+                            _this.loginStatus = 1;
+                            _this.userInfo = data.data.data;
+                        }
+                    });
+                },
+                signout() {
+                    var _this = this;
+                    if (localStorage.getItem('token') == null) {
+                        // 本地没有token，则说明用户没有登录
+                        _this.userInfo = {};
+                        _this.loginStatus = 0;
+                        return;
+                    }
+                    // 到服务器必须执行退出（清除session）
+                    axios.get('/bbs-security/user/signout').then(data => {
+                        this.userInfo = {};
+                        _this.loginStatus = 0;
+                        localStorage.removeItem('token');
+                    });
+                },
+                home() {
+                    var _this = this; // 防止变量污染
+                    axios.get('/bbs-board/board/findAllBoard').then(data => {
+                        // data 是一个对象，它下面有 data 属性，这个属性中才是服务端回送的 JSON
+                        if (data.data.code == 0) {
+                            alert("暂无数据!");
+                            return;
+                        }
+                        //alert(data.data.code);
+                        // 取顶层版块列表
+                        _this.boardData = data.data.data["0"];
+                        // 循环顶层版块
+                        for (var i = 0; i < _this.boardData.length; i++) {
+                            // 取顶层版块的编号
+                            // 取此子版块的列表
+                            _this.boardData[i].sonData = data.data.data[_this.boardData[i].boardid];
+                        }
+                    });
+                },
+                openDetailHtml(topicid) {
+                    sessionStorage.setItem('topicInfo', JSON.stringify({ "topicid": topicid }));
+                    window.open("detail.html", "_self");
+                },
+                openListHtml(boardid, boardname) {
+                    sessionStorage.setItem('boardInfo', JSON.stringify({ "boardid": boardid, "boardname": boardname }));
+                    window.open('/bbs-web/list.html', '_self');
+                }
+            },
+            mounted: function () {
+                axios.all([this.home(), this.isOnLine()]).then(axios.spread(function (d1, d2) {
+                    // Your code after axios requests are resolved...
+                }));
+            }
+        });
+    </script>
 </html>

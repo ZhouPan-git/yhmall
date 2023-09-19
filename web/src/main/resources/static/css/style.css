@@ -74,8 +74,8 @@ input,button{border-top-width: 0px;
 .index .top a:hover{text-decoration:underline}
 
 
-.index .head .logo{float:left;width:415px;height:80px;background:url(../images/home/logo.jpg) no-repeat;margin:38px 0px 0 0}
-.index .head .logo a{display:inline-block;width:415px;height:80px;}
+.index .head .logo{float:left;width:300px;height:80px;background:url(../images/home/logo.jpg) no-repeat;margin:38px 0px 0 0}
+.index .head .logo a{display:inline-block;width:300px;height:80px;}
 .index .head .search{float:left;margin:50px 0 0 35px}
 .index .head .search form{height:46px}
 .index .head .search .txt{float:left;color:#999;border:1px solid #dedede;border-right:none;width:415px;height:43px;float:left;padding:0 5px;border-radius:3px 0 0 3px;font-weight:bold}

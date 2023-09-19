@@ -67,7 +67,7 @@ public interface ProductBiz {
      * 查询不同活动商品的前5个
      * @return
      */
-    public List<Product> findProductBySpecialTop();
+    public List<Product> findProductBySpecialTop(int num);
 
     /**
      * 分页查询具体活动的商品

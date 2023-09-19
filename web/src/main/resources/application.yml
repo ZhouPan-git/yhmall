@@ -1,5 +1,10 @@
 server:
-  port: 6000
+  port: 6009
+spring:
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
   web:
     resources:
       #      SpringMVC指定静态页面存放位置
