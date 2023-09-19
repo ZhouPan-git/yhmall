@@ -24,10 +24,10 @@
 <div class="m_bg" id="app">
 	<div class="w1185">
     	<form action="#" class="form">
-        	<p class="p01"><span>会员登录</span><a href="#">免费注册</a></p>
+        	<p class="p01"><span>会员登录</span><a href="reg.html">免费注册</a></p>
         	<p class="p02"><input class="txt" name=""   v-model="username" onblur="if(value=='') {value='账户名'}" onfocus="if(value=='账户名') {value=''}" type="text" value="账户名"/></p>
-            <p class="p03"><input class="txt" name=""   v-model="password" onblur="if(value=='') {value='密码'}" onfocus="if(value=='密码') {value=''}" type="text" value="密码"/></p>
-            <p class="p04"><span class="sp01"><input name="" type="checkbox"/>自动登录</span><span class="sp02">忘记密码？点击<a href="#">找回密码</a></span></p>
+            <p class="p03"><input class="txt" name=""   v-model="password"  type="password" value="密码"/></p>
+            <p class="p04"><span class="sp01"><input name="" id="automatic" type="checkbox"/>自动登录</span><span class="sp02">忘记密码？点击<a href="backpwd.html">找回密码</a></span></p>
             <p class="p05"><input class="sub" type="button" value="立即登陆"  @click="login()"/></p>
             <p class="p06">使用合作网站账号登录：</p>
             <p class="p07"><a class="a01" href="#"></a><a class="a02" href="#"></a><a class="a03" href="#"></a></p>
@@ -47,18 +47,41 @@
         Vue.config.productionTip = false;
 
         // 配置访问的地址
-        var base_url = "http://localhost:10000/";
+        var base_url = "http://localhost:20001/";
         var addr_bbssecurity = base_url + "security/";
 
         let vm = new Vue({
             el: "#app",
             data: {
-                username: 'XG', // 登录时用的参数
-                password: 'a'
+                username: '', // 登录时用的参数
+                password: ''
+            },
+            created() {
+                this.username = sessionStorage.getItem("username");
+                this.password = sessionStorage.getItem("password");
+
+                // 判断是否记住密码
+                if (typeof this.username === "string") {
+                    this.checked = true;
+                } else {
+                    this.checked = false;
+                }
             },
             methods: {
                 login(){
                     let params = new URLSearchParams();
+                    var agreeCheckbox = document.getElementById("automatic");
+
+                    var username = this.username;
+                    var password = this.password;
+
+                    if (agreeCheckbox.checked) {
+                        // 用户勾选了复选框，执行存操作
+                        sessionStorage.setItem("username",username)
+                        sessionStorage.setItem("password",password)
+                    } else {
+                        sessionStorage.clear();
+                    }
                     params.append("username",this.username);
                     params.append("password",this.password);
                     axios.post(addr_bbssecurity+"security/user/login.action",params).then(data=>{

@@ -20,6 +20,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -106,6 +107,7 @@ public class  JwtAuthenticationController {
 		//根据用户详情生成token
 		final String token = jwtTokenUtil.generateToken(userDetails);
 
+		System.out.println(token);
 		//在业务层多增加一个方法 根据uname再查一次User(com.yc.bean)
 		User user = userDetailsService.findUserByUname(username);
 		session.setAttribute("user",user);
@@ -124,14 +126,28 @@ public class  JwtAuthenticationController {
 			@ApiImplicitParam(name="gender",value = "性别",required = true),
 			@ApiImplicitParam(name="code",value = "验证码",required = true),
 	})
-
 	@RequestMapping(value = "/reg.action",method = RequestMethod.POST)
-	public Map<String,Object> reg(User user, HttpSession session ,String valcode) throws Exception{
+	public Map<String,Object> reg(User user, HttpSession session ,String valcode,String username) throws Exception{
 		Map<String,Object> result = new HashMap<>();
+		//判断验证码
 		String code = (String) session.getAttribute("code");
-		if (!code.equals(valcode)){
+		if (code==null){
 			result.put("code",0);
 			result.put("msg","验证码错误");
+			return result;
+		}
+		if (!code.equalsIgnoreCase(valcode)){
+			result.put("code",0);
+			result.put("msg","验证码错误");
+			return result;
+		}
+		//判断用户名是否存在
+		String valname = username;
+		session.setAttribute("valname",valname);
+		int a = (int) this.userDetailsService.findAllUser(username,session);
+		if (a==0){
+			result.put("code",0);
+			result.put("msg","用户名已使用");
 			return result;
 		}
 		//密码加密
@@ -143,6 +159,36 @@ public class  JwtAuthenticationController {
 		result.put("date",u);
 		return result;
 	}
+
+
+	@RequestMapping(value = "/backpwd.action",method = RequestMethod.POST)
+	public Map<String,Object> backpwd(User user, HttpSession session ,String valcode,String username,String password) throws Exception{
+		Map<String,Object> result = new HashMap<>();
+		//判断验证码
+		String code = (String) session.getAttribute("code");
+		if (code==null){
+			result.put("code",0);
+			result.put("msg","验证码错误");
+			return result;
+		}
+		if (!code.equalsIgnoreCase(valcode)){
+			result.put("code",0);
+			result.put("msg","验证码错误");
+			return result;
+		}
+		//密码加密
+		BCryptPasswordEncoder be = new BCryptPasswordEncoder();
+		user.setPassword(be.encode(user.getPassword()));
+
+		String rawPassword = password; // 前端传递的原始密码
+		String encodedPassword = be.encode(rawPassword); // 使用 BCryptPasswordEncoder 加密密码
+
+		User u = this.userDetailsService.backpwd(username,encodedPassword);  //业务注册
+		result.put("code",1);
+		result.put("date",u);
+		return result;
+	}
+
 
 	private void authenticate(String username, String password) throws Exception {
 		try {

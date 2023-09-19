@@ -73,7 +73,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 						 "/bbssecurity/user/code.action",
 
 				                    "/email/sendEmail",
-
+									"/security/user/backpwd.action",
 									"/security/user/reg.action",
 									"/security/user/login.action",
 						            "/bbssecurity/user/loginCheck",

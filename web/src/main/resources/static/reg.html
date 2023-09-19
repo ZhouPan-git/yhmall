@@ -27,16 +27,17 @@
         	<p><b>免费注册</b></p>
             <form action="#" class="form">
                 <ul>
+                     <li><span><font>*</font> 用户名：</span><input class="txt" name="" type="text" v-model="username"/></li>
                      <li><span><font>*</font> 邮箱账号：</span><input class="txt" name="" type="text" v-model="email"/></li>
-                     <li><span><font>*</font> 请设置密码：</span><input class="txt" name="" type="text" v-model="password"/></li>
-                     <li><span><font>*</font> 请确认密码：</span><input class="txt" name="" type="text" v-model="password1"/></li>
+                     <li><span><font>*</font> 请设置密码：</span><input class="txt" name="" type="password" v-model="password"/></li>
+                     <li><span><font>*</font> 请确认密码：</span><input class="txt" name="" type="password" v-model="password1"/></li>
                      <li class="li03"><span><font>*</font> 验证码：</span><input class="txt txt2" name="" type="text" v-model="valcode"/><img src="images/code.jpg" @click="sendEmail()"/></li>
-                     <li class="li01"><input name="" type="checkbox" value=""/>我已阅并同意<a rel="#">《易易城用户注册协议》</a></li>
+                     <li class="li01"><input name="" id="agreeCheckbox" type="checkbox" value=""/>我已阅并同意<a rel="#">《易易城用户注册协议》</a></li>
                      <li class="li02"><input class="sub" type="button" value="立即注册" @click="reg()"/></li>
                 </ul>
             </form>
         </div>
-        <div class="right">我经注册，马上<a rel="#">登录</a></div>
+        <div class="right">我经注册，马上<a href="login.html">登录</a></div>
         <div class="clear"></div>
     </div>
 </div>
@@ -53,12 +54,13 @@
         Vue.config.productionTip = false;
 
         // 配置访问的地址
-        var base_url = "http://localhost:10000/";
+        var base_url = "http://localhost:20001/";
         var addr_bbssecurity = base_url + "security/";
 
         let vm = new Vue({
             el: "#app",
             data: {
+                username: 'XG',
                 email: '2890305092@qq.com', // 登录时用的参数
                 password: 'a',
                 password1: 'a',
@@ -80,15 +82,27 @@
                         alert("验证码为空。。。")
                         return;
                     }
+                    //复选框
+                    var agreeCheckbox = document.getElementById("agreeCheckbox");
+                    if (agreeCheckbox.checked) {
+                        // 用户勾选了复选框，执行登录操作
+
+                        // 在这里可以添加执行登录的代码
+                    } else {
+                        // 用户未勾选复选框，阻止登录操作
+                        alert("请勾选同意协议才能登录");
+                        return;
+                        // 在这里可以添加阻止登录的代码或弹出提示信息给用户
+                    }
                     let params = new URLSearchParams();
+                    params.append("username",this.username);
                     params.append("email",this.email);
                     params.append("password",this.password);
-                    params.append("email",this.email);
                     params.append("valcode",this.valcode)
                     axios.post(addr_bbssecurity+"security/user/reg.action",params).then(data=>{
                         if (data.data.code == 1) {
                             alert("注册成功！");
-                            window.location = 'index.html';
+                            window.location = 'login.html';
                         }
                         let result = data.data;
                         if (result.code == 0) {
@@ -100,5 +114,5 @@
             }
         });
     </script>
-</body>
+</body>login
 </html>
